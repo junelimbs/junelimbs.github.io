@@ -113,6 +113,7 @@ Level.prototype.cardMouseUp = function(card) {
 
 Level.prototype.cardDragStart = function(card) {
 	//this.draggedCard = card;
+	this.cardMouseOver(card);
 	console.log("started gradding card");
 };
 
