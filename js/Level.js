@@ -10,9 +10,16 @@ var proto = Object.create(Phaser.State);
 Level.prototype = proto;
 
 Level.prototype.create = function() {
+	this.putTableTexture();
 	this.createCards();
 	this.game.input.addMoveCallback(this.mouseMoveHandle, this);
 	//this.moveMonkey();
+};
+
+Level.prototype.putTableTexture = function() {
+	this.wallpaper = this.add.image(0,0,"wp");
+	this.wallpaper.height = this.game.height;
+	this.wallpaper.width = this.game.width;
 };
 
 Level.prototype.createCards = function() {
@@ -20,8 +27,8 @@ Level.prototype.createCards = function() {
 	this.cards = [];
 	var card;
 	for (var i = 0; i < 5; i++) {
-		var startXPos = 280 + i * 120;
-		var startYPos = this.world.height - 250;
+		var startXPos = 330 + i * 120;
+		var startYPos = this.world.height - 180;
 		card = this.add.sprite(startXPos, startYPos,
 		"card"); 
 		card.anchor.set(0.5, 0.5);
@@ -53,18 +60,18 @@ Level.prototype.cardMouseOver = function(card) {
 	twn.to({
 		x: 1.2,
 		y: 1.2,
-	}, 200, "Linear", true);
+	}, 150, "Cubic", true);
 	
 	twn = this.add.tween(card);
 	twn.to({
 		angle: 0
-	}, 150, "Linear", true);
+	}, 150, "Cubic", true);
 	
 	twn = this.add.tween(card.position);
 	twn.to({
 		x : card.customAttributes.defaultX,
 		y : card.customAttributes.defaultY - 50
-	}, 200, "Linear", true);
+	}, 150, "Cubic", true);
 	card.bringToTop();
 	
 	// when tween completes, quit the game
@@ -83,7 +90,7 @@ Level.prototype.cardMouseOut = function(card) {
 	twn.to({
 		x : 1.0,
 		y : 1.0
-	}, 200, "Linear", true);
+	}, 150, "Linear", true);
 	
 	twn = this.add.tween(card);
 	twn.to({
@@ -94,7 +101,7 @@ Level.prototype.cardMouseOut = function(card) {
 	twn.to({
 		x : card.customAttributes.defaultX,
 		y : card.customAttributes.defaultY
-	}, 200, "Linear", true);
+	}, 150, "Linear", true);
 
 	// when tween completes, quit the game
 	//twn.onComplete.addOnce(this.updateCardPosition, this, 0, card);
@@ -112,15 +119,22 @@ Level.prototype.cardMouseUp = function(card) {
 };
 
 Level.prototype.cardDragStart = function(card) {
-	//this.draggedCard = card;
+	this.draggedCard = card;
 	this.cardMouseOver(card);
-	console.log("started gradding card");
+	console.log("started dragging card");
 };
 
 Level.prototype.cardDragStop = function(card) {
-	//this.draggedCard = null;
-	this.cardMouseOut(card);
-	console.log("stopped gradding card");
+	this.draggedCard = null;
+	if (card.position.y < 200) {
+		twn = this.add.tween(card);
+		twn.to({
+			alpha: 0,
+		}, 200, "Power3", true);
+	} else {
+		this.cardMouseOut(card);		
+	}
+	console.log("stopped dragging card");
 };
 
 Level.prototype.update = function() {
@@ -152,7 +166,7 @@ Level.prototype.getAngleForCard = function(targetCard) {
 		//card.bringToTop();
 	}
 	return deg;
-}
+};
 
 Level.prototype.updateCardPosition = function(point, tween, targetCard) {
 	console.log(targetCard); 	
@@ -162,8 +176,8 @@ Level.prototype.mouseMoveHandle = function(pointer, x, y, downState) {
 	//if (typeof(this.draggedCard) != "undefined" && ) {
 	if (this.draggedCard) {
 		var card = this.draggedCard;
-		card.position.x = x;
-		card.position.y = y;
+		card.scale.x = 1.3;
+		card.scale.y = 1.3;
 	}
 };
 

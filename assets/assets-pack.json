@@ -17,12 +17,18 @@
             "overwrite": false,
             "key": "card",
             "url": "assets/images/card.png"
+        },
+        {
+            "type": "image",
+            "overwrite": false,
+            "key": "wp",
+            "url": "assets/images/wp.jpg"
         }
     ],
     "meta": {
         "app": "Phaser Editor",
         "copyright": "Arian Fornaris (boniatillo.com) 2015",
-        "generated": "1459013588887",
+        "generated": "1459041744297",
         "version": "1.0",
         "url": "http://boniatillo.com"
     },
